@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.nelioalves.cursomc.domain.Categoria;
+import com.nelioalves.cursomc.dto.CategoriaDTO;
 import com.nelioalves.cursomc.repositories.CategoriaRepository;
 import com.nelioalves.cursomc.services.exceptions.DataIntegrityException;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
@@ -39,26 +40,25 @@ public class CategoriaService {
 	
 	public void delete(Integer id) {
 		find(id);
-		try {
-		repo.deleteById(id);
-		}
-		catch(DataIntegrityViolationException e){
-			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos");
-		}
-		
-	}
+			try {
+				repo.deleteById(id);
+				}catch(DataIntegrityViolationException e){
+				throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos");
+				}
+			}
 	
 	
 	public List<Categoria> findAll(){
 		return repo.findAll();
 	}
 	
-	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){{
+	
+	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
 	}
 		
+	public Categoria fromDTO(CategoriaDTO ObjDto) {
+		return new Categoria(ObjDto.getId(), ObjDto.getNome());
 	}
 }
-
-
